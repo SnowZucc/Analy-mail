@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Analy'mail",
+  "version": "1",
+  "description": "Scans your emails in search of phishing attacks",
+  "permissions": ["tabs"],
+  "action": {
+    "default_icon": {
+      "16": "cropped.png"
+    }
+
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["contentScript.js"]
+    }
+  ],
+  "icons": {
+    "16": "cropped.png"
+  }
+}
