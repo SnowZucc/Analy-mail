@@ -7,8 +7,8 @@
   "action": {
     "default_icon": {
       "16": "cropped.png"
-    }
-
+    },
+      "default_popup": "popup.html"
   },
   "background": {
     "service_worker": "background.js"
