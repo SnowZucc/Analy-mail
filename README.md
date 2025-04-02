@@ -1,8 +1,8 @@
-# CyberCoach Pro - Email Security Assistant  
+# Don't Click! - Email Security Assistant  
 
 ## Overview  
 
-CyberCoach Pro is a browser extension that performs real-time email analysis to detect phishing attempts and security risks. It combines advanced local scanning with AI-powered evaluation via Google Gemini to deliver actionable security insights.  
+Don't Click! is a browser extension that performs real-time email analysis to detect phishing attempts and security risks. It combines advanced local scanning with AI-powered evaluation via Google Gemini to deliver actionable security insights.  
 
 **Key Features**:  
 - 🛡️ Real-time email analysis (Gmail/Outlook)  

@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "CyberCoach Pro",
+  "name": "Don't Click!",
   "version": "3.0",
   "description": "Analysez les emails localement, obtenez une seconde opinion IA, et visualisez les risques directement dans vos emails.",
   "permissions": [
