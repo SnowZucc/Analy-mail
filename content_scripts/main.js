@@ -595,13 +595,24 @@ function removeHighlight(elementToRemove) {
 }
 
 function applyHighlights(analysisResult) {
-  cleanupHighlights();
+  cleanupHighlights(); // Clear previous highlights first
   if (!analysisResult || !analysisResult.localResult) return;
 
   const { localResult } = analysisResult;
   const { senderReasons, linkReasons } = localResult;
 
-  // Highlight Sender
+  // *** Get the email body element *once* at the beginning ***
+  const emailBodyElement = getEmailBodyElement();
+
+  // If we can't find the body element, we can't safely apply highlights.
+  if (!emailBodyElement) {
+      console.warn("applyHighlights: Could not find email body element. Skipping highlights.");
+      return;
+  }
+
+  // --- Highlight Sender ---
+  // Sender selectors are usually specific to header elements, less likely to clash,
+  // but we could add a check if needed. For now, let's assume they are okay.
   senderReasons.forEach(reason => {
     if (reason.includes("<mark")) { // Check if reason indicates a notable risk
       let senderElement;
@@ -610,13 +621,19 @@ function applyHighlights(analysisResult) {
       } else if (currentPlatform === 'outlook') {
         senderElement = document.querySelector('[data-testid="message-header-container"] span[title*="@"]')?.closest('div, span') || document.querySelector('[data-testid="sender-email-address"]')?.closest('div, span');
       }
-      if (senderElement) {
-        addHighlight(senderElement, 'yellow', `Expéditeur: ${reason.replace(/<span[^>]*>|<\/span>|<mark[^>]*>|<\/mark>/g, "")}`);
+      // Add a check: ensure the found sender element is somewhat related to the main view, not sidebar.
+      // This check is basic, might need refinement based on Gmail's structure.
+      // It checks if the element is inside the main mail view container (heuristically '.nH') or the document body.
+      const mainMailView = document.querySelector('.nH');
+      if (senderElement && (mainMailView?.contains(senderElement) || document.body.contains(senderElement) /* Fallback */)) {
+         addHighlight(senderElement, 'yellow', `Expéditeur: ${reason.replace(/<span[^>]*>|<\/span>|<mark[^>]*>|<\/mark>/g, "")}`);
+      } else if (senderElement) {
+         // console.log("Sender element found but potentially outside main view, skipping highlight:", senderElement);
       }
     }
   });
 
-  // Highlight Links
+  // --- Highlight Links (SCOPE CHANGED HERE) ---
   linkReasons.forEach(reason => {
     if (reason.includes("<mark")) { // Check if reason indicates a notable risk
       const cleanedReason = reason.replace(/<span[^>]*>|<\/span>|<mark[^>]*>|<\/mark>/g, "");
@@ -624,27 +641,39 @@ function applyHighlights(analysisResult) {
       const target = urlMatch ? urlMatch[1] : null;
 
       if (target) {
-        document.querySelectorAll(`a[href]`).forEach(a => {
+        // *** CRITICAL CHANGE: Query *only within* the email body element ***
+        emailBodyElement.querySelectorAll(`a[href]`).forEach(a => {
+
+          // *** Double-check: Ensure the link 'a' is truly a descendant of emailBodyElement ***
+          // This acts as a safeguard in case querySelectorAll behaves unexpectedly or emailBodyElement is wrong.
+          if (!emailBodyElement.contains(a)) {
+              return; // Skip this link if it's not within the identified body
+          }
+
           let matchFound = false;
           try {
             // Try exact match first
             if (a.href === target) {
               matchFound = true;
             }
-            // Try partial match (e.g., target is a prefix)
-            else if (a.href.includes(target)) {
-              matchFound = true;
-            }
-            // Try domain matching (useful for variations like www.)
+            // Try partial match (e.g., target is a prefix) - Be careful with this, can be too broad
+            // else if (a.href.includes(target)) {
+            //   matchFound = true;
+            // }
+            // Try domain matching (safer than partial includes)
             else {
-              const linkDomain = new URL(a.href).hostname.replace(/^www\./, '');
-              if (target.includes(linkDomain) || linkDomain.includes(target)) {
+              const linkUrl = new URL(a.href);
+              const targetUrl = new URL(target); // Assume target is a valid URL here based on regex match
+              const linkDomain = linkUrl.hostname.replace(/^www\./, '');
+              const targetDomain = targetUrl.hostname.replace(/^www\./, '');
+              // Check if domains match or are subdomains of each other (simple check)
+              if (linkDomain === targetDomain || linkDomain.endsWith('.' + targetDomain) || targetDomain.endsWith('.' + linkDomain)) {
                 matchFound = true;
               }
             }
-          } catch { /* Ignore invalid URLs */ }
+          } catch { /* Ignore errors parsing potentially invalid URLs */ }
 
-          // Only highlight visible links
+          // Only highlight visible links that match
           if (matchFound && a.offsetParent !== null) {
             addHighlight(a, 'danger', `Lien (${escapeHtml(target.substring(0, 30))}...): ${cleanedReason}`);
           }
@@ -653,43 +682,44 @@ function applyHighlights(analysisResult) {
     }
   });
 
-  // Highlight Urgent Keywords in Body (using TreeWalker for text nodes)
+  // --- Highlight Urgent Keywords ---
+  // This part already uses getEmailBodyElement(), so it should be correctly scoped *if*
+  // getEmailBodyElement() returns the correct element.
   try {
     const urgentKeywords = localResult.foundKeywords?.urgent || [];
-    if (urgentKeywords.length > 0) {
-      const bodyElement = getEmailBodyElement();
-      if (bodyElement) {
-        const walker = document.createTreeWalker(bodyElement, NodeFilter.SHOW_TEXT, null, false);
-        let node;
-        const nodesToModify = [];
-        // Collect text nodes first to avoid issues modifying DOM during traversal
-        while (node = walker.nextNode()) {
-          // Ensure nodeValue exists and parent is not SCRIPT/STYLE or already highlighted/UI element
-          if (node.nodeValue && node.parentNode && node.parentNode.nodeName !== 'SCRIPT' && node.parentNode.nodeName !== 'STYLE' && !node.parentNode.closest('.cc-highlight-red, .cc-highlight-yellow, #cybercoach-analysis-container')) {
-            nodesToModify.push(node);
-          }
+    // Check emailBodyElement again just to be safe
+    if (urgentKeywords.length > 0 && emailBodyElement) {
+      const walker = document.createTreeWalker(emailBodyElement, NodeFilter.SHOW_TEXT, null, false);
+      let node;
+      const nodesToModify = [];
+      // Collect text nodes first
+      while (node = walker.nextNode()) {
+        if (node.nodeValue && node.parentNode && node.parentNode.nodeName !== 'SCRIPT' && node.parentNode.nodeName !== 'STYLE' && !node.parentNode.closest('.cc-highlight-red, .cc-highlight-yellow, #cybercoach-analysis-container')) {
+          nodesToModify.push(node);
         }
-        // Process collected nodes
-        nodesToModify.forEach(textNode => {
-          let nodeContent = textNode.nodeValue;
-          let matchFound = false;
-          urgentKeywords.forEach(kw => {
-            const regex = new RegExp(`\\b(${kw.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})\\b`, 'gi');
-            if (regex.test(nodeContent)) {
-              nodeContent = nodeContent.replace(regex, `<mark class="cc-urgent-highlight">$1</mark>`);
-              matchFound = true;
-            }
-          });
-          // Replace text node with a span containing the highlighted HTML
-          if (matchFound && textNode.parentNode) {
-            const replacementSpan = document.createElement('span');
-            replacementSpan.innerHTML = nodeContent;
-            textNode.parentNode.insertBefore(replacementSpan, textNode);
-            textNode.parentNode.removeChild(textNode);
-            // Note: This modifies the DOM structure. Cleanup requires replacing the span back.
+      }
+      // Process collected nodes
+      nodesToModify.forEach(textNode => {
+        let nodeContent = textNode.nodeValue;
+        let matchFound = false;
+        urgentKeywords.forEach(kw => {
+          const regex = new RegExp(`\\b(${kw.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})\\b`, 'gi');
+          if (regex.test(nodeContent)) {
+            nodeContent = nodeContent.replace(regex, `<mark class="cc-urgent-highlight">$1</mark>`);
+            matchFound = true;
           }
         });
-      }
+        // Replace text node with a span containing the highlighted HTML
+        if (matchFound && textNode.parentNode) {
+          const replacementSpan = document.createElement('span');
+          replacementSpan.innerHTML = nodeContent;
+          // Check if parent still exists before replacing (important in dynamic DOMs)
+          if(document.body.contains(textNode)){
+             textNode.parentNode.insertBefore(replacementSpan, textNode);
+             textNode.parentNode.removeChild(textNode);
+          }
+        }
+      });
     }
   } catch (error) {
     console.error("Error applying urgent keyword highlights:", error);
