@@ -1,6 +1,6 @@
 // content_scripts/main.js
 
-console.log('CyberCoach Pro Content Script Loaded - v3.2');
+console.log('Don\'t Click! : Content Script Loaded - v3.2');
 
 const CYBERCOACH_UI_ID = 'cybercoach-analysis-container';
 const LOADER_ID = 'cybercoach-loading-indicator';
@@ -138,7 +138,7 @@ function debounce(func, wait) {
       try {
         func.apply(context, args);
       } catch (e) {
-        console.error("CyberCoach: Error in debounced callback:", e);
+        console.error("Don\'t Click! : Error in debounced callback:", e);
       }
     }, wait);
   };
@@ -316,7 +316,7 @@ function addReShowButton() {
 
   const reshowBtn = document.createElement('button');
   reshowBtn.id = RESHOW_BTN_ID;
-  reshowBtn.setAttribute('aria-label', 'Réafficher l\'analyse CyberCoach');
+  reshowBtn.setAttribute('aria-label', 'Réafficher l\'analyse Don\'t Click!');
   reshowBtn.innerHTML = ICONS.shield;
   reshowBtn.title = 'Réafficher l\'analyse';
 
@@ -2300,7 +2300,7 @@ function performAnalysis(platform, containerElement, messageElement) {
       displayUI(fullAnalysisResult); // Display results
 
     } catch (error) {
-      console.error('CyberCoach: Error during local analysis steps:', error);
+      console.error('Don\'t Click! : Error during local analysis steps:', error);
       hideLoadingIndicator(); // Hide loader on error
       removeUI(); // Ensure UI is removed on error
       // Optionally display an error message UI here
@@ -2405,7 +2405,7 @@ function platformDetectionCallback() {
     }
 
   } catch (error) {
-    console.error("CyberCoach: Error during platform detection callback:", error);
+    console.error("Don\'t Click! : Error during platform detection callback:", error);
     isAnalyzing = false; // Ensure flag is reset on error
     if (analysisTimeoutId) clearTimeout(analysisTimeoutId);
   }
@@ -2433,7 +2433,7 @@ function startObserver() {
       subtree: true    // Watch descendants as well
     });
     observerControl = { disconnect: () => observerInstance.disconnect() }; // Store control object
-    console.log("CyberCoach MutationObserver started.");
+    console.log("Don\'t Click! : MutationObserver started.");
   } catch (error) {
     console.error('Observer: FAILED TO START OBSERVING:', error);
     observerControl = null;
@@ -2444,7 +2444,7 @@ function startObserver() {
 // --- Initialization ---
 
 function initCyberCoach() {
-  console.log("CyberCoach: Initializing...");
+  console.log("Don\'t Click! : Initializing...");
   // Clear any pending timeouts
   if (initTimeout) { clearTimeout(initTimeout); initTimeout = null; }
 
@@ -2470,18 +2470,18 @@ function initCyberCoach() {
       currentPlatform = 'outlook';
     } else {
       currentPlatform = null;
-      console.log("CyberCoach: Unsupported platform:", hostname);
+      console.log("Don\'t Click! : Unsupported platform:", hostname);
     }
 
     // Start observer if on a supported platform
     if (currentPlatform) {
-      console.log("CyberCoach: Detected platform:", currentPlatform);
+      console.log("Don\'t Click! : Detected platform:", currentPlatform);
       observerControl = startObserver();
       // Run initial detection shortly after observer starts
       setTimeout(platformDetectionCallback, 750);
     }
   } catch (error) {
-    console.error("CyberCoach Pro: Error during init:", error);
+    console.error("Don\'t Click! : Error during init:", error);
     currentPlatform = null;
     if (observerControl) { // Ensure observer is stopped on error
       observerControl.disconnect();
@@ -2492,7 +2492,7 @@ function initCyberCoach() {
 
 // Function to schedule initialization with a delay
 function runInitialization(eventName = "Unknown") {
-  // console.log(`CyberCoach: runInitialization triggered by: ${eventName}`);
+  // console.log(`Don\'t Click! : runInitialization triggered by: ${eventName}`);
   if (initTimeout) {
     clearTimeout(initTimeout);
   }
@@ -2539,11 +2539,11 @@ window.addEventListener('hashchange', () => runInitialization('window.hashchange
 setTimeout(() => {
   // Check if observer started, analysis running, or UI showing
   if (!observerControl && !isAnalyzing && !currentUIRef && !currentLoaderRef) {
-    console.log("CyberCoach: Triggering fallback initialization.");
+    console.log("Don\'t Click! : Triggering fallback initialization.");
     runInitialization('Fallback Timeout');
   } else if (observerControl && !currentEmailId && !currentUIRef && !currentLoaderRef) {
     // If observer is running but no email detected yet, run detection again
-    console.log("CyberCoach: Observer running, but no email detected. Triggering detection.");
+    console.log("Don\'t Click! : Observer running, but no email detected. Triggering detection.");
     platformDetectionCallback();
   }
 }, 5000); // 5-second fallback
@@ -2557,4 +2557,4 @@ getApiKey().then(key => {
   // console.log("CyberCoach: API Key loaded on init:", key ? "Found" : "Not Found");
 });
 
-console.log('CyberCoach Pro Content Script Execution Finished - v3.2');
+console.log('Don\'t Click! : Content Script Execution Finished - v3.2');
