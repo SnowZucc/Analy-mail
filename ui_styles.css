@@ -1,0 +1,229 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+
+/* Base container */
+#cybercoach-container {
+  --cc-font-family: 'Roboto', 'Poppins', sans-serif;
+  --cc-bg-color: #ffffff;
+  --cc-text-color: #202124; /* Google's dark grey */
+  --cc-secondary-text-color: #5f6368; /* Google's secondary grey */
+  --cc-border-color: #dadce0; /* Google's border color */
+  --cc-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15);
+  --cc-border-radius: 8px;
+
+  /* Status colors */
+  --cc-secure-color: #1e8e3e; /* Google Green */
+  --cc-secure-bg: #e6f4ea;
+  --cc-moderate-color: #f9ab00; /* Google Yellow/Orange */
+  --cc-moderate-bg: #fff7e0;
+  --cc-danger-color: #d93025; /* Google Red */
+  --cc-danger-bg: #fce8e6;
+
+  position: fixed;
+  top: 70px; /* Adjust as needed */
+  right: 15px;
+  width: 320px;
+  z-index: 2147483647;
+  font-family: var(--cc-font-family);
+  color: var(--cc-text-color);
+  background-color: var(--cc-bg-color);
+  border-radius: var(--cc-border-radius);
+  box-shadow: var(--cc-shadow);
+  overflow: hidden;
+  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+  font-size: 13px; /* Slightly smaller base */
+  opacity: 0;
+  transform: scale(0.95) translateY(-10px);
+  border: 1px solid var(--cc-border-color);
+}
+
+#cybercoach-container.visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* Header/Card Area */
+.cybercoach-card {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+}
+
+.cybercoach-icon-area svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.cybercoach-text {
+  flex-grow: 1;
+  line-height: 1.4;
+}
+
+.cybercoach-status {
+  font-weight: 500; /* Medium weight */
+  font-size: 1.05em;
+  color: var(--cc-status-color, var(--cc-text-color)); /* Use status color */
+}
+
+.cybercoach-score-badge {
+  font-size: 0.9em;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-left: 12px;
+  flex-shrink: 0;
+  background-color: var(--cc-status-bg-light, #f1f3f4); /* Light background for badge */
+  color: var(--cc-status-color, var(--cc-text-color));
+  border: 1px solid var(--cc-status-border-light, var(--cc-border-color));
+}
+
+/* Close Button */
+.cybercoach-close-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  opacity: 0.6;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+.cybercoach-close-btn:hover {
+  background-color: rgba(60, 64, 67, 0.08);
+  opacity: 1;
+}
+.cybercoach-close-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: var(--cc-secondary-text-color);
+}
+
+/* Color Variants Applied to Container */
+#cybercoach-container.secure { --cc-status-color: var(--cc-secure-color); --cc-status-bg-light: var(--cc-secure-bg); --cc-status-border-light: #a8dab5; }
+#cybercoach-container.moderate { --cc-status-color: var(--cc-moderate-color); --cc-status-bg-light: var(--cc-moderate-bg); --cc-status-border-light: #fdd663; }
+#cybercoach-container.danger { --cc-status-color: var(--cc-danger-color); --cc-status-bg-light: var(--cc-danger-bg); --cc-status-border-light: #f7b4ae;}
+
+/* Icon Fill Colors Based on Status */
+#cybercoach-container.secure .cybercoach-icon-area svg { fill: var(--cc-secure-color); }
+#cybercoach-container.moderate .cybercoach-icon-area svg { fill: var(--cc-moderate-color); }
+#cybercoach-container.danger .cybercoach-icon-area svg { fill: var(--cc-danger-color); }
+
+
+/* Expand/Collapse Trigger */
+.cybercoach-expand-area {
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.95em;
+  color: #1a73e8; /* Google Blue for link */
+  background-color: #f8f9fa;
+  border-top: 1px solid var(--cc-border-color);
+  transition: background-color 0.2s ease;
+  font-weight: 500;
+  text-align: center; /* Center trigger */
+}
+.cybercoach-expand-area:hover {
+  background-color: #f1f3f4;
+}
+.cybercoach-expand-area span { /* Arrow */
+  display: inline-block;
+  transition: transform 0.2s ease-out;
+  margin-left: 4px;
+}
+.cybercoach-expand-area.expanded span { /* Arrow Pointing Up */
+  transform: rotate(180deg);
+}
+
+/* Details Section (Collapsible) */
+.cybercoach-details-wrapper {
+   max-height: 0;
+   overflow: hidden;
+   transition: max-height 0.35s ease-in-out;
+   background-color: #f8f9fa;
+   border-top: 1px solid var(--cc-border-color);
+}
+.cybercoach-details-wrapper.visible {
+   max-height: 600px; /* Generous max height */
+}
+.cybercoach-details-content {
+   padding: 16px;
+   font-size: 0.95em;
+   line-height: 1.5;
+}
+.cybercoach-detail-item {
+  margin-bottom: 12px;
+}
+.cybercoach-detail-item:last-child {
+  margin-bottom: 0;
+}
+.cybercoach-detail-item strong {
+  font-weight: 500;
+  color: var(--cc-text-color);
+  display: block;
+  margin-bottom: 4px;
+}
+.cybercoach-detail-item ul {
+  list-style-type: none; /* Remove default bullets */
+  padding-left: 0;
+  margin: 0;
+}
+.cybercoach-detail-item li {
+  margin-bottom: 5px;
+  padding-left: 16px; /* Indent */
+  position: relative;
+  color: var(--cc-secondary-text-color);
+}
+/* Custom bullet */
+.cybercoach-detail-item li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--cc-secondary-text-color); /* Bullet color */
+  font-size: 1.1em; /* Adjust bullet size */
+}
+
+/* Tips Section (Inside Details) */
+.cybercoach-tips {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--cc-border-color);
+}
+.cybercoach-tips strong {
+  font-weight: 500;
+  color: var(--cc-text-color);
+  display: block;
+  margin-bottom: 6px;
+}
+.cybercoach-tips ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: var(--cc-secondary-text-color);
+}
+.cybercoach-tips li {
+  padding-left: 16px; /* Indent */
+  position: relative;
+  margin-bottom: 6px;
+}
+.cybercoach-tips li:last-child {
+  margin-bottom: 0;
+}
+/* Custom bullet for tips */
+.cybercoach-tips li::before {
+  content: '💡'; /* Lightbulb or other icon */
+  position: absolute;
+  left: -2px; /* Adjust positioning */
+  top: 0;
+  font-size: 0.9em;
+}

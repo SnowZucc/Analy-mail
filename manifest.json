@@ -1,35 +1,37 @@
 {
   "manifest_version": 3,
-  "name": "Analy'mail",
-  "version": "1",
-  "description": "Scans your emails in search of phishing attacks",
-  "permissions": ["tabs"],
-  "host_permissions": [
-    "https://mail.google.com/*",
-    "https://outlook.office.com/*"
+  "name": "CyberCoach",
+  "version": "2.0",
+  "description": "Analyse locale et rapide des emails pour évaluer les risques et sensibiliser à la cybersécurité.",
+  "permissions": [
+    "storage",
+    "activeTab"
   ],
-  "action": {
-    "default_icon": {
-      "16": "cropped.png"
-    },
-    "default_popup": "popup.html"
+  "host_permissions": [
+    "*://mail.google.com/*",
+    "*://outlook.live.com/*",
+    "*://outlook.office.com/*",
+    "*://outlook.office365.com/*"
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   },
   "background": {
     "service_worker": "background.js"
   },
-"content_scripts": [
-  {
-    "matches": [
-      "https://mail.google.com/*", 
-      "https://*.mail.google.com/*",
-      "https://outlook.office.com/*", 
-      "https://outlook.live.com/*"
-    ],
-    "js": ["contentScript.js"],
-    "run_at": "document_idle"
-  }
-],
-  "icons": {
-    "16": "cropped.png"
-  }
+  "content_scripts": [
+    {
+      "matches": [
+        "*://mail.google.com/*",
+        "*://outlook.live.com/*",
+        "*://outlook.office.com/*",
+        "*://outlook.office365.com/*"
+      ],
+      "js": ["content_scripts/main.js"],
+      "css": ["styles/main.css", "styles/loading.css"],
+      "run_at": "document_idle"
+    }
+  ]
 }
