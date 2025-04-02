@@ -1,0 +1,34 @@
+Custom License - Non-Commercial Open Share-Alike
+
+Version 1.0 - March 2025
+
+1. Non-Commercial Use Only
+This software, including any part of its code, documentation, or other materials, may not be used for any commercial purpose. 
+"Commercial purpose" includes, but is not limited to, using the software in any product, service, or process for which compensation is directly or indirectly received, whether through sales, licensing, or other forms of financial gain.
+
+2. Open Source Share-Alike
+Any modification, adaptation, or derivative work created from this software must be publicly released under this same license. 
+- This requirement applies to all changes, including those made for private use.
+- The modified source code must be made publicly accessible within 30 days of creation or modification, in a publicly accessible repository.
+- The modified repository must clearly state that it is a derivative work of this software and provide a link to the original repository.
+
+3. Attribution Requirement
+All copies, forks, or derivative works must give clear and visible credit to the original author and repository. 
+- The original author's name and a direct link to the original repository must appear prominently in the README file and any documentation associated with the modified project.
+- The original copyright notice must be preserved in all copies.
+
+4. Inclusion of License
+This license must be included with all copies or substantial portions of the software, including modified versions.
+
+5. No Warranty
+This software is provided "as is", without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, and non-infringement. 
+In no event shall the author(s) or copyright holder(s) be liable for any claim, damages, or other liability arising from or connected with the software or its use.
+
+6. Termination
+Any violation of these terms will immediately terminate your rights under this license. Upon termination, you must cease all use, distribution, and modification of the software.
+
+---
+
+This is a custom license, not approved by the Open Source Initiative (OSI), and is intended for projects requiring strict control over non-commercial use and mandatory source code sharing.
+
+© Copyright SnowZucc 2025
