@@ -1,10 +1,10 @@
-/* Import Google Font (Keep Roboto/Poppins) */
+/* styles/main.css - v3.1.2 (Final UI & Indentation) */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap');
 
-/* Base container */
+/* --- Base Variables & Container --- */
 #cybercoach-analysis-container {
-  --cc-font-family: 'Roboto', 'Poppins', sans-serif; /* Use Poppins as fallback */
-  --cc-bg-color: #ffffff;
+  --cc-font-family: 'Roboto', 'Poppins', sans-serif;
+  --cc-bg-color: #ffffff; /* Explicit white */
   --cc-text-color: #202124;
   --cc-secondary-text-color: #5f6368;
   --cc-border-color: #dadce0;
@@ -16,23 +16,32 @@
   --cc-green: #1e8e3e;
   --cc-grey-bg: #f1f3f4;
   --cc-grey-bg-hover: #e8eaed;
+  --cc-red-light-bg: #fce8e6;
+  --cc-yellow-light-bg: #fff7e0;
+  --cc-green-light-bg: #e6f4ea;
+  --cc-red-darker: #a50e0e;
+  --cc-yellow-darker: #e37400;
 
   position: fixed;
   top: 75px;
   right: 20px;
-  width: 330px;
+  width: 350px;
   z-index: 2147483646;
   font-family: var(--cc-font-family);
   color: var(--cc-text-color);
-  background-color: var(--cc-bg-color);
+  background-color: var(--cc-bg-color); /* Use the variable */
   border-radius: var(--cc-border-radius);
   box-shadow: var(--cc-shadow);
-  overflow: hidden;
+  overflow: hidden; /* Keep hidden on main container */
   transition: opacity 0.25s ease-out, transform 0.25s ease-out;
   font-size: 14px;
   opacity: 0;
   transform: scale(0.95) translateY(-5px);
   border: 1px solid var(--cc-border-color);
+  box-sizing: border-box;
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Stack children vertically */
+  max-height: calc(100vh - 90px); /* Limit overall height */
 }
 
 #cybercoach-analysis-container.visible {
@@ -40,30 +49,32 @@
   transform: scale(1) translateY(0);
 }
 
-/* Header */
+/* --- Non-Scrolling Sections (Header, Tips) --- */
+.cc-header, .cc-tips-section {
+  flex-shrink: 0; /* Prevent these from shrinking */
+}
+
 .cc-header {
   display: flex;
   align-items: center;
   padding: 12px 16px;
-  border-bottom: 1px solid var(--cc-border-color);
-  position: relative; /* Needed for absolute positioning of close button */
+  position: relative;
 }
 
 .cc-status-icon {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   margin-right: 12px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%; /* Optional: background circle */
+  border-radius: 50%;
 }
-/* SVG color is set via fill="currentColor" in JS and inherits from parent */
 .cc-status-icon svg {
-  width: 20px; /* Adjust size as needed */
+  width: 20px;
   height: 20px;
-  color: #fff; /* White icon fill when on colored background */
+  color: #fff;
 }
 
 .cc-header-text {
@@ -72,7 +83,7 @@
 }
 .cc-status-title {
   font-weight: 500;
-  font-size: 1em;
+  font-size: 1.05em;
   color: var(--status-color);
 }
 .cc-score-display {
@@ -81,11 +92,18 @@
   color: var(--cc-secondary-text-color);
 }
 .cc-score-display span {
-    font-weight: 400;
-    font-size: 0.9em;
+  font-weight: 400;
+  font-size: 0.9em;
 }
 
-/* Close Button */
+/* Status Colors */
+#cybercoach-analysis-container.secure { --status-color: var(--cc-green); }
+#cybercoach-analysis-container.secure .cc-status-icon { background-color: var(--cc-green); }
+#cybercoach-analysis-container.moderate { --status-color: var(--cc-yellow-darker); }
+#cybercoach-analysis-container.moderate .cc-status-icon { background-color: var(--cc-yellow); }
+#cybercoach-analysis-container.danger { --status-color: var(--cc-red); }
+#cybercoach-analysis-container.danger .cc-status-icon { background-color: var(--cc-red); }
+
 .cc-close-button {
   position: absolute;
   top: 8px;
@@ -100,8 +118,9 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  color: var(--cc-secondary-text-color); /* Sets initial SVG fill */
+  color: var(--cc-secondary-text-color);
   transition: background-color 0.2s ease;
+  z-index: 10;
 }
 .cc-close-button:hover {
   background-color: var(--cc-grey-bg-hover);
@@ -111,21 +130,14 @@
   height: 20px;
 }
 
-/* Color Variants */
-#cybercoach-analysis-container.secure { --status-color: var(--cc-green); }
-#cybercoach-analysis-container.secure .cc-status-icon { background-color: var(--cc-green); }
-#cybercoach-analysis-container.moderate { --status-color: var(--cc-yellow); }
-#cybercoach-analysis-container.moderate .cc-status-icon { background-color: var(--cc-yellow); }
-#cybercoach-analysis-container.danger { --status-color: var(--cc-red); }
-#cybercoach-analysis-container.danger .cc-status-icon { background-color: var(--cc-red); }
-
-/* Tips Section */
+/* Tips Section Styles */
 .cc-tips-section {
   padding: 12px 16px;
   background-color: var(--cc-grey-bg);
   font-size: 0.9em;
   line-height: 1.4;
   color: var(--cc-secondary-text-color);
+  border-top: 1px solid var(--cc-border-color);
   border-bottom: 1px solid var(--cc-border-color);
 }
 .cc-tips-section strong {
@@ -140,30 +152,209 @@
   margin: 0;
 }
 .cc-tips-section li {
-  display: flex; /* Use flex to align icon and text */
-  align-items: flex-start; /* Align items at the start */
+  display: flex;
+  align-items: flex-start;
   margin-bottom: 5px;
 }
-.cc-tips-section li:last-child { margin-bottom: 0; }
-.cc-tips-section li svg { /* Style for tip icons */
+.cc-tips-section li:last-child {
+  margin-bottom: 0;
+}
+.cc-tips-section li svg {
   width: 16px;
   height: 16px;
   margin-right: 6px;
   flex-shrink: 0;
-  margin-top: 2px; /* Align icon slightly better with text */
-  /* Color is set inline via JS based on status */
+  margin-top: 2px;
 }
 
-/* Expand Button */
-.cc-expand-button {
-  display: flex; /* Use flex to align text and icon */
+/* --- SCROLLABLE WRAPPER for AI & Details --- */
+.cc-scrollable-content {
+  flex-grow: 1; /* Allow this section to grow */
+  overflow-y: auto; /* Enable vertical scrolling ONLY HERE */
+  border-top: 1px solid var(--cc-border-color); /* Separator line */
+  /* Subtle scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: var(--cc-border-color) var(--cc-grey-bg);
+}
+/* Webkit scrollbar styling */
+.cc-scrollable-content::-webkit-scrollbar {
+  width: 8px;
+}
+.cc-scrollable-content::-webkit-scrollbar-track {
+  background: var(--cc-grey-bg);
+  border-radius: 4px;
+}
+.cc-scrollable-content::-webkit-scrollbar-thumb {
+  background-color: var(--cc-border-color);
+  border-radius: 4px;
+  border: 2px solid var(--cc-grey-bg);
+}
+.cc-scrollable-content::-webkit-scrollbar-thumb:hover {
+  background-color: var(--cc-secondary-text-color);
+}
+
+/* --- AI Analysis Section --- */
+.cc-ai-section {
+  padding: 12px 16px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid var(--cc-border-color);
+}
+#cc-ask-ai-btn {
+  display: flex;
   align-items: center;
-  justify-content: center; /* Center content */
+  justify-content: center;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.9em;
+  font-weight: 500;
+  border-radius: 6px;
+  border: 1px solid var(--cc-blue);
+  background-color: var(--cc-blue);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  margin-bottom: 10px;
+}
+#cc-ask-ai-btn:hover {
+  background-color: #1765cc;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+#cc-ask-ai-btn svg {
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+}
+#cc-ask-ai-btn:disabled {
+  background-color: #d0d0d0;
+  border-color: #c0c0c0;
+  color: #888;
+  cursor: not-allowed;
+}
+
+/* API Key Input */
+#cc-api-key-section {
+  display: none; /* Shown by JS if needed */
+  margin-bottom: 10px;
+}
+#cc-api-key-section p {
+  font-size: 0.85em;
+  color: var(--cc-secondary-text-color);
+  margin: 0 0 5px 0;
+}
+#cc-api-key-input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--cc-border-color);
+  border-radius: 4px;
+  font-size: 0.9em;
+  margin-bottom: 6px;
+  box-sizing: border-box;
+}
+#cc-save-api-key-btn {
+  padding: 5px 10px;
+  font-size: 0.85em;
+  border-radius: 4px;
+  border: 1px solid #1e8e3e;
+  background-color: #1e8e3e;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+#cc-save-api-key-btn:hover {
+  background-color: #166d2e;
+}
+#cc-save-api-key-btn:disabled {
+  background-color: #d0d0d0;
+  border-color: #c0c0c0;
+  color: #888;
+  cursor: not-allowed;
+}
+
+/* AI Results */
+#cc-ai-results {
+  font-size: 0.9em;
+  line-height: 1.5;
+  color: var(--cc-secondary-text-color);
+  padding-top: 10px;
+  margin-top: 10px;
+  position: relative; /* For positioning hide button */
+}
+#cc-ai-results strong {
+  color: var(--cc-text-color);
+  font-weight: 500;
+}
+#cc-ai-results ul {
+  list-style: none;
+  padding: 0;
+  margin: 5px 0 5px 0; /* Add bottom margin */
+}
+#cc-ai-results li {
+  margin-bottom: 4px;
+  padding-left: 16px;
+  position: relative;
+}
+#cc-ai-results li::before {
+  content: '»';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--cc-blue);
+  font-size: 1.1em;
+}
+#cc-ai-results .error {
+  color: var(--cc-red);
+  font-weight: 500;
+}
+#cc-ai-results .loading {
+  display: flex;
+  align-items: center;
+}
+#cc-ai-results .loading .cc-spinner {
+  width: 16px;
+  height: 16px;
+  border-width: 3px;
+  margin-right: 8px;
+}
+
+/* Hide AI Button - Improved Design */
+#cc-hide-ai-btn {
+  position: absolute;
+  top: 2px; /* Closer to the top edge */
+  right: 2px;
+  width: 26px; /* Smaller */
+  height: 26px;
+  padding: 0; /* Remove padding */
+  border-radius: 50%; /* Circular */
+  background-color: var(--cc-grey-bg);
+  border: 1px solid var(--cc-border-color);
+  color: var(--cc-secondary-text-color);
+  cursor: pointer;
+  display: flex; /* Center icon */
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  z-index: 5; /* Ensure it's clickable */
+}
+#cc-hide-ai-btn:hover {
+  background-color: var(--cc-grey-bg-hover);
+  color: var(--cc-text-color);
+}
+#cc-hide-ai-btn svg { /* Style for SVG icon inside */
+  width: 18px;
+  height: 18px;
+  fill: currentColor; /* Inherit button color */
+}
+
+
+/* --- Expand Button & Details Section --- */
+.cc-expand-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   padding: 10px 16px;
   background-color: #fff;
-  border: none;
-  border-top: 1px solid var(--cc-border-color);
+  border: none; /* No top border needed as it's inside scrollable */
   text-align: center;
   font-weight: 500;
   color: var(--cc-blue);
@@ -174,7 +365,7 @@
 .cc-expand-button:hover {
   background-color: var(--cc-grey-bg);
 }
-.cc-expand-button svg { /* Arrow icon */
+.cc-expand-button svg {
   width: 20px;
   height: 20px;
   fill: currentColor; /* Inherit color (blue) */
@@ -185,106 +376,311 @@
   transform: rotate(180deg);
 }
 
-/* Details Section */
+/* Details Section Content */
 .cc-details-wrapper {
-   max-height: 0;
-   overflow: hidden;
-   transition: max-height 0.35s ease-in-out;
-   background-color: #fff;
+  /* No max-height or overflow here - handled by .cc-scrollable-content */
+  background-color: #fff;
+  display: none; /* Hide by default */
 }
 .cc-details-wrapper.visible {
-   max-height: 400px;
-   overflow-y: auto;
+  display: block; /* Show when expanded */
 }
 .cc-details-content {
-   padding: 16px;
-   font-size: 0.9em;
-   line-height: 1.5;
-   border-top: 1px solid var(--cc-border-color);
+  padding: 16px;
+  font-size: 0.9em;
+  line-height: 1.5;
+  /* No border-top needed */
 }
-.cc-detail-item { margin-bottom: 14px; }
-.cc-detail-item:last-child { margin-bottom: 0; }
-.cc-detail-item strong { font-weight: 500; color: var(--cc-text-color); display: block; margin-bottom: 5px; }
-.cc-detail-item ul { list-style-type: none; padding-left: 0; margin: 0; }
-.cc-detail-item li { padding-left: 18px; position: relative; margin-bottom: 5px; color: var(--cc-secondary-text-color); }
-.cc-detail-item li::before { content: '•'; position: absolute; left: 0; top: 0; color: var(--cc-secondary-text-color); font-size: 1.2em; }
-.cc-detail-item li:last-child { margin-bottom: 0; }
-.cc-detail-item li mark { background-color: #fdd; padding: 0 2px; border-radius: 2px; color: var(--cc-red); font-weight: 500; }
-
-/* Re-Show Button */
-#cybercoach-reshow-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background-color: var(--cc-blue);
-    border: none;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.1);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white; /* Icon color */
-    z-index: 2147483645;
-    opacity: 0;
-    transform: scale(0.8);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    visibility: hidden;
+.cc-detail-item {
+  margin-bottom: 14px;
 }
-#cybercoach-reshow-button.visible { opacity: 1; transform: scale(1); visibility: visible; }
-#cybercoach-reshow-button:hover { background-color: #185abc; }
-#cybercoach-reshow-button svg { width: 24px; height: 24px; }
+.cc-detail-item:last-child {
+  margin-bottom: 0;
+}
+.cc-detail-item strong {
+  font-weight: 500;
+  color: var(--cc-text-color);
+  display: block;
+  margin-bottom: 5px;
+}
+.cc-detail-item ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+.cc-detail-item li {
+  padding-left: 18px;
+  position: relative;
+  margin-bottom: 5px;
+  color: var(--cc-secondary-text-color);
+  display: flex; /* Improved alignment */
+  align-items: flex-start;
+}
+.cc-detail-item li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  top: 1px; /* Adjust vertical alignment */
+  color: var(--cc-secondary-text-color);
+  font-size: 1.2em;
+  line-height: 1.4; /* Match text line-height */
+}
+.cc-detail-item li:last-child {
+  margin-bottom: 0;
+}
+.cc-detail-item li .cc-reason-text {
+  flex-grow: 1; /* Allow text to wrap */
+}
 
-/* Styling for highlighted reasons and keywords */
+/* Highlighting Marks in Details & AI Results */
 .cc-detail-item li mark,
-.cc-detail-item ul mark /* Style mark within the keyword list specifically */
-{
-  background-color: #fef3cd; /* Light yellow background */
+.cc-detail-item ul mark,
+#cc-ai-results mark {
+  background-color: var(--cc-yellow-light-bg);
   padding: 1px 3px;
   border-radius: 3px;
-  color: #856404; /* Dark yellow/brown text */
+  color: var(--cc-yellow-darker);
   font-weight: 500;
-  border: 1px solid #ffeeba; /* Light yellow border */
+  border: 1px solid #ffeeba;
+  margin: 0 1px;
+}
+.cc-detail-item li mark.high-risk,
+#cc-ai-results mark.high-risk {
+  background-color: var(--cc-red-light-bg);
+  color: var(--cc-red);
+  border-color: #f7b4ae;
 }
 
-/* More emphasis for high-risk marks if needed */
-.cc-detail-item li mark.high-risk { /* You'd need to add class="high-risk" in JS if desired */
-   background-color: #fdd; /* Light red */
-   color: var(--cc-red);
-   border-color: #f7b4ae;
+/* Explain Risk Icon */
+.cc-explain-risk {
+  display: inline-flex; /* Use flex for centering */
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--cc-grey-bg);
+  border: 1px solid var(--cc-border-color);
+  color: var(--cc-secondary-text-color);
+  font-size: 11px; /* Icon size */
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 6px;
+  flex-shrink: 0; /* Prevent shrinking */
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  user-select: none; /* Prevent text selection */
+  line-height: 1; /* Prevent text shifting */
+}
+.cc-explain-risk:hover {
+  background-color: var(--cc-blue);
+  color: white;
+  border-color: var(--cc-blue);
 }
 
-/* Ensure keyword list items look okay */
-.cc-detail-item ul li mark { /* Specifically target marks in keyword list for potential spacing */
-    margin-right: 5px;
+
+/* --- Re-Show Button (Unchanged) --- */
+#cybercoach-reshow-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--cc-blue);
+  border: none;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white; /* Icon color */
+  z-index: 2147483645;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  visibility: hidden;
+}
+#cybercoach-reshow-button.visible {
+  opacity: 1;
+  transform: scale(1);
+  visibility: visible;
+}
+#cybercoach-reshow-button:hover {
+  background-color: #185abc;
+}
+#cybercoach-reshow-button svg {
+  width: 24px;
+  height: 24px;
 }
 
-/* Close Button */
-.cc-close-button {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: none;
-    border: none;
-    cursor: pointer; /* Ensure this is present */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    color: var(--cc-secondary-text-color); /* Sets initial SVG fill */
-    transition: background-color 0.2s ease;
-    z-index: 10; /* Add z-index */
-  }
-  .cc-close-button:hover {
-    background-color: var(--cc-grey-bg-hover);
-  }
-  .cc-close-button svg {
-    width: 20px;
-    height: 20px;
-  }
-  
+/* --- Live Risk Highlighting & Tooltip (Unchanged) --- */
+@keyframes pulseRed {
+  0% { box-shadow: 0 0 0 0 rgba(217, 48, 37, 0.7); }
+  70% { box-shadow: 0 0 0 8px rgba(217, 48, 37, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(217, 48, 37, 0); }
+}
+@keyframes pulseYellow {
+  0% { box-shadow: 0 0 0 0 rgba(249, 171, 0, 0.7); }
+  70% { box-shadow: 0 0 0 8px rgba(249, 171, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(249, 171, 0, 0); }
+}
+.cc-highlight-red {
+  outline: 2px solid var(--cc-red) !important;
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(217, 48, 37, 0.5);
+  cursor: help;
+  transition: outline 0.3s ease, box-shadow 0.3s ease;
+}
+.cc-highlight-yellow {
+  outline: 2px solid var(--cc-yellow-darker) !important;
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(249, 171, 0, 0.5);
+  cursor: help;
+  transition: outline 0.3s ease, box-shadow 0.3s ease;
+}
+mark.cc-urgent-highlight {
+  background-color: var(--cc-yellow-light-bg);
+  color: var(--cc-yellow-darker);
+  padding: 0 2px;
+  border-radius: 2px;
+  font-weight: 500;
+}
+#cc-highlight-tooltip {
+  position: absolute;
+  background-color: rgba(32, 33, 36, 0.9); /* Dark background */
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  max-width: 280px;
+  z-index: 2147483647; /* Highest */
+  pointer-events: none; /* Allow clicks to pass through initially */
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+  white-space: normal; /* Allow wrapping */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+#cc-highlight-tooltip.visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto; /* Enable interaction when visible */
+}
+#cc-highlight-tooltip strong {
+  color: #fbbc04; /* Yellow for emphasis */
+  font-weight: 500;
+}
+.cc-tooltip-dismiss {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  color: #ddd;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: center;
+  font-weight: bold;
+  padding: 0;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.cc-tooltip-dismiss:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* --- Explanation Modal --- */
+#cc-explanation-modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(32, 33, 36, 0.6); /* Darker backdrop */
+  z-index: 2147483647 - 1; /* Just below tooltip */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+#cc-explanation-modal-backdrop.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+#cc-explanation-modal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.95); /* Start slightly smaller */
+  background-color: #ffffff; /* Ensure solid white background */
+  color: var(--cc-text-color); /* Ensure text color is set */
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  padding: 20px;
+  padding-top: 45px; /* More top padding for close button */
+  width: 90%;
+  max-width: 450px;
+  z-index: 2147483647; /* Highest */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  font-size: 0.95em;
+  line-height: 1.5;
+  max-height: 80vh; /* Prevent modal from being too tall */
+  overflow-y: auto; /* Add scroll if content overflows */
+}
+#cc-explanation-modal.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+#cc-explanation-modal h4 {
+  margin: 0 0 12px 0;
+  font-size: 1.15em;
+  font-weight: 500;
+  color: var(--cc-text-color);
+  border-bottom: 1px solid var(--cc-border-color);
+  padding-bottom: 10px;
+}
+#cc-explanation-modal p {
+  margin: 0 0 12px 0;
+  color: var(--cc-secondary-text-color);
+}
+#cc-explanation-modal p:last-of-type {
+  margin-bottom: 0;
+}
+#cc-explanation-modal mark {
+  background-color: var(--cc-yellow-light-bg);
+  padding: 1px 3px;
+  border-radius: 3px;
+  color: var(--cc-yellow-darker);
+  font-weight: 500;
+  border: 1px solid #ffeeba;
+  margin: 0 1px;
+}
+#cc-explanation-modal .cc-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--cc-secondary-text-color);
+  transition: background-color 0.2s ease;
+}
+#cc-explanation-modal .cc-modal-close:hover {
+  background-color: var(--cc-grey-bg-hover);
+}
+#cc-explanation-modal .cc-modal-close svg {
+  width: 20px;
+  height: 20px;
+}

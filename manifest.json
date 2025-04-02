@@ -1,11 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "CyberCoach",
-  "version": "2.0",
-  "description": "Analyse locale et rapide des emails pour évaluer les risques et sensibiliser à la cybersécurité.",
+  "name": "CyberCoach Pro",
+  "version": "3.0",
+  "description": "Analysez les emails localement, obtenez une seconde opinion IA, et visualisez les risques directement dans vos emails.",
   "permissions": [
     "storage",
-    "activeTab"
+    "activeTab",
+    "scripting" 
   ],
   "host_permissions": [
     "*://mail.google.com/*",
@@ -33,5 +34,7 @@
       "css": ["styles/main.css", "styles/loading.css"],
       "run_at": "document_idle"
     }
-  ]
+  ],
+   "options_ui": {
+  }
 }
