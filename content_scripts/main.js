@@ -399,7 +399,7 @@ function generateGeminiPrompt(localData) {
   const { sender, subject, links } = localData.emailData;
   const { senderScore, linkScore, contentScore, structureScore, senderReasons, linkReasons, contentReasons, structureReasons, foundKeywords } = localData;
 
-  let prompt = `Agis comme un expert en cybersécurité. Analyse les métadonnées d'email suivantes pour détecter un potentiel phishing ou une intention malveillante. Fournis une évaluation de risque concise EN FRANÇAIS.
+  let prompt = `Agis comme un expert en cybersécurité. Analyse les métadonnées d'email suivantes pour détecter un potentiel phishing ou une intention malveillante. Fournis une évaluation de risque concise EN FRANÇAIS. N'oublie pas que, si le sender du mail est légitime, fais baisser le score au maximum. Généralement, c'est une preuve que le mail est safe peu importe l'envoyeur, si ça vient du site officiel, donc flag le en "safe" sauf si il y a vraiment un élément très très suspect !
 
 Métadonnées Fournies:
 - Expéditeur: "${sender || 'Non disponible'}"
@@ -433,7 +433,7 @@ Résumé de l'analyse locale:
 
   prompt += `
 Tâche:
-Basé *uniquement* sur les métadonnées fournies:
+Basé sur les métadonnées fournies, et en prenant en compte la personne qui a envoyé le mail (le sender ici, si le sender est quelqu'un de safe, alors tu sais que le mail n'est tout simplement PAS UN DANGER, donc tu peux automatiquement flag le mail comme "faible"):
 1.  Donne un niveau de risque global unique: "Faible", "Moyen", "Élevé", ou "Critique".
 2.  Donne 2 à 4 points clés (bullet points) expliquant les facteurs *principaux* influençant ton évaluation, en te concentrant sur les risques les plus significatifs. N'invente pas de détails absents des métadonnées.
 
